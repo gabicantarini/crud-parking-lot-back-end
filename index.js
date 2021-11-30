@@ -1,4 +1,6 @@
 import express from 'express';
+import { activityCheckin, activityCheckout } from './controllers/activitiesController.js';
+import { insertVehicles, listVehicles, removeVehicle, updateVehicles } from './controllers/vehiclesController.js';
 import { openDatabase } from './database.js';
 
 const app = express();
@@ -14,77 +16,24 @@ app.get('/api/ping', (request, response) => {
 
 /*Endpoints Vehicles*/
 //função para buscar informações no banco de dados
-app.get('/api/vehicles', async (request, response) => {
-     //select para puxar informações do banco de dados
-     const db = await openDatabase();
-     /*usamos a crase para pular linha*/
-     const vehicles = await db.all(` 
-         SELECT * FROM vehicles
-     `);
-    db.close(); // para fechar o banco de dados quando pararmos de executar
-    response.send(vehicles);
-});
+app.get('/api/vehicles', listVehicles);
 
-app.post('/api/vehicles', async (request, response) => {
-    const { model, label, type, owner, description } = request.body;
-    const db = await openDatabase();
-    const data = await db.run(` 
-         INSERT INTO vehicles (model, label, type, owner, description)
-         VALUES (?, ?, ?, ?, ?)
-     `, [model, label, type, owner, description]);
-    db.close();
-    response.send({
-        id: data.lastID,
-        model, 
-        label, 
-        type, 
-        owner,
-        description
-    });
-});
+app.post('/api/vehicles', insertVehicles);
 
 //para atualizações
-app.put('/api/vehicles/:id', async (request, response) => {
-    const { model, label, type, owner, description } = request.body;
-    const { id } = request.params;
+app.put('/api/vehicles/:id', updateVehicles);
 
-    const db = await openDatabase();
+app.delete('/api/vehicles/:id', removeVehicle);
 
-    const vehicle = await db.get(` 
-    SELECT * FROM vehicles WHERE id = ?
-    `, [id]);
 
-    if (vehicle) {
-        const data = await db.run(` 
-        UPDATE vehicles 
-            SET model = ?,
-                label = ?, 
-                type = ?, 
-                owner =?, 
-                description =?
-         WHERE id = ?
-        `, [model, label, type, owner, description, id]);
+/*Endpoints Activities*/
+app.post('/api/activities/checkin', activityCheckin);
 
-        db.close();
-        response.send({
-            id: data.lastID,
-            model, 
-            label, 
-            type, 
-            owner,
-            description
-        });
-        return;
-    }
-    
-    db.close();
-    response.send(vehicle || {});
+app.put('/api/activities/checkout', activityCheckout);
 
-});
+app.pdelete('/api/activities/:id', removeActivity);
 
-app.delete('/api/vehicles/:id', (request, response) => {
-
-});
+app.pget('/api/activities', );
 
 app.listen(8000, () => {
     console.log("Servidor rodando na porta 8000...");
@@ -97,3 +46,5 @@ app.listen(8000, () => {
  //       return;
 
  //   }
+ /* pra rodar a API no postman precisa dar o comando no console npm run dev*/
+ /*const = variavel*/
