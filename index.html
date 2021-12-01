@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+    <html lang="pt-br">
+        <head>
+            <meta charset="UTF-8">
+           <title>Traco | Seja bem vindo</title>
+        </head>
+        <body>
+            <nav>
+                <img>
+                <div>
+                    <a>Cadastro</a>
+                    <a>Checkin</a>
+                    <a>Clientes</a>
+                    <a>Faturamento</a>
+                </div>
+            </nav>
+            <main>
+                <form id="formulario">
+                    <h1>Novo Cliente</h1>
+                    <label>Nome do Cliente</label>
+                    <input id="nome" type="text" placeholder="Digite o seu nome">
+                    </br></br>
+                    <label>Modelo</label>
+                    <input id="nome" type="text" placeholder="Digite o modelo do veículo">
+                    </br></br>
+                    <label>Tipo</label>
+                    <select id="tipo" type="text" placeholder= "Digite o tipo"> 
+                        <option value="1">Carro</option>
+                        <option value="0">Moto</option>
+                    </select>
+                    </br></br>
+                    <label>Placa</label>
+                    <input id="placa" type="text" placeholder="Digite a placa do veículo">
+                    </br></br>
+                    <label>Observações</label>
+                    <input id="odbservacoes" type="text" placeholder="Digite a observação">
+                    </br></br>
+
+                    <div>
+                        <button id="cancelar" type="button">Cancelar</button>
+                        <button id="salvar" type="submit">Salvar</button>
+                    </div>
+                    
+                </form>
+            </main>
+        </body>
+        <script type="module" src="controller/cadastro.js"></script>
+    </html>
