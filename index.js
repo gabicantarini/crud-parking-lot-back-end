@@ -1,49 +1,119 @@
-import express from 'express';
-import { activityCheckin, 
-         activityCheckout,
-         removeActivity,
-         listActivities } from './controllers/activitiesController.js';
-import { insertVehicles, 
-         listVehicles, 
-         removeVehicle, 
-         updateVehicles } from './controllers/vehiclesController.js';
+
+const url = "https://traco-3.herokuapp.com/api"
+// ------------- POST ----------------------
+const postVeiculo = (objetoCliente) => {
+    console.log("objetoCliente: ", JSON.stringify(objetoCliente))
+    return fetch(url + "/vehicles", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(objetoCliente) 
+    }).then((response) => {
+       if(response.status != 200){
+           console.log(`Erro no servidor: ${response.status}`)
+       }else {
+           alert(`Sucesso ao salvar: ${response.status}`)
+       }
+    })
+}
+
+const postCheckin = (label) => {
+    return fetch(url + "/activities/checkin", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({label}) 
+    }).then((response) => {
+       if(response.status != 200){
+           console.log(`Erro no servidor: ${response.status}`)
+       }else {
+           return response.json()
+       }
+    })
+}
 
 
-const app = express();
+// ------------ GET ---------------------------
+const getVeiculo = () => {
+    return fetch(url + "/vehicles")
+    .then((response) => {
+        if(response.status != 200){
+            console.log(`Erro no servidor: ${response.status}`)
+        }else {
+            return response.json()
+        }
+     })
+}
 
-app.use(express.json());
+const getActivities = () => {
+    return fetch(url + "/activities")
+    .then((response) => {
+        if(response.status != 200){
+            console.log(`Erro no servidor: ${response.status}`)
+        }else {
+            return response.json()
+        }
+     })
+}
+//------------ PUT -------------------------------
 
-app.get('/api/ping', (request, response) => {
-    response.send({
-        message: 'pong'
-    });
-});
+const putVeiculo = (objetoCliente, id) => {
+    return fetch(`${url}/vehicles/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(objetoCliente) 
+    }).then((response) => {
+       if(response.status != 200){
+           console.log(`Erro no servidor: ${response.status}`)
+       }else {
+          return response.json()
+       }
+    })
+}
+
+const putCheckout = (objeto) => {
+    return fetch(url + "/activities/checkout", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(objeto) 
+    }).then((response) => {
+       if(response.status != 200){
+           console.log(`Erro no servidor: ${response.status}`)
+       }else {
+           return response.json()
+       }
+    })
+}
+
+// -------------- DELETE -------------------
+const deletaVeiculo = (id) => {
+    return fetch(`${url}/vehicles/${id}`, {
+        method: "DELETE",
+    }).then((response) => {
+       if(response.status != 200){
+           console.log(`Erro no servidor: ${response.status}`)
+       }else {
+          return response.json()
+       }
+    })
+}
+
+//organiação da exportação
+// -------------- EXPORT --------------------
+export const service = {
+    postVeiculo,
+    getVeiculo,
+    putVeiculo,
+    deletaVeiculo,
+    getActivities,
+    postCheckin,
+    putCheckout
+}
 
 
-/*Endpoints Vehicles*/
-//função para buscar informações no banco de dados
-app.get('/api/vehicles', listVehicles);
-app.post('/api/vehicles', insertVehicles);
-//para atualizações
-app.put('/api/vehicles/:id', updateVehicles);
-app.delete('/api/vehicles/:id', removeVehicle);
-
-
-/*Endpoints Activities*/
-app.post('/api/activities/checkin', activityCheckin);
-app.put('/api/activities/checkout', activityCheckout);
-app.delete('/api/activities/:id', removeActivity);
-app.get('/api/activities', listActivities);
-app.listen(8000, () => {
-    console.log("Servidor rodando na porta 8000...");
-});
-
-
-/* pro js se a variável tem valor é true, se não tem valor, é falso. Neste caso o id tem valor, é true*/
- //   if (id) {
- //       response.send(vehicles.filter(vehicles => vehicles.id == id));
- //       return;
-
- //   }
- /* pra rodar a API no postman precisa dar o comando no console npm run dev*/
- /*const = variavel*/
