@@ -1,6 +1,7 @@
 import { service } from "../service/index.js";
 import { view } from "../view/index.js"
 
+//qnd usuário clica no checkou, vem pra cá
 export const ChekoutComponent = (idParametro) => {
     view.getSpinner();
     setTimeout(()=> {
@@ -10,13 +11,14 @@ export const ChekoutComponent = (idParametro) => {
         dados.forEach(element => {
             if (element.id == idParametro) {
                 adicionaParametrosNaTela(element)
-                buscarRegistro(idParametro)
+                buscarRegistro(idParametro) //busca o id do carro
             }
         });
     })
     },600)
 }
 let placa = ''
+//cria linha na tabela
 const adicionaParametrosNaTela = (objeto) => {
     placa = objeto.label
     const NovaLinha = document.getElementById('tbody')
@@ -38,18 +40,20 @@ const buscarRegistro = (id) => {
     })
 }
 
+//calculo da quantidade de horas que o carro ficou no estacionamento
 const valorHora = 5;
 const valorMinuto = valorHora / 60;
 const adicionaParametrosNoInput = (element) => {
-    const checkin = new Date(element.checkin_at)
-    const checkout = new Date()
-    const tempo = checkout - checkin
-    const hora = calculaHora(tempo)
+    const checkin = new Date(element.checkin_at) //converter checkin para data
+    const checkout = new Date() //pega o checkout
+    const tempo = checkout - checkin //para descobrir o tempo
+    const hora = calculaHora(tempo) // enviamos o tempo em milissegundos para a função calculahora
     const totalApagar = (hora.minutos + (hora.horas * 60)) * valorMinuto;
    
     const inputHora = document.getElementById('totalHora')
     const inputTotal = document.getElementById('valorPagar')
 
+    //determina a cobrança de acordo com as horas
     if (hora.minutos < 10 && hora.horas < 10)
         inputHora.value = `Tempo 0${hora.horas}:0${hora.minutos}`;
 
@@ -65,10 +69,11 @@ const adicionaParametrosNoInput = (element) => {
         inputTotal.value = `R$: ${totalApagar.toFixed(2)}`;
     }
 
+    //id do botão finalizar 
     const finalizar = document.getElementById('finalizar')
     finalizar.addEventListener('click', ()=> {
         const preco = document.getElementById('valorPagar').value
-        const stringPreco = preco.split(" ")
+        const stringPreco = preco.split(" ") //split transforma o preço numa array de string
         const objeto = {
             label: placa,
             price: Number(stringPreco[1])
@@ -76,7 +81,7 @@ const adicionaParametrosNoInput = (element) => {
         checkoutAPI(objeto)
     })
 }
-
+//para converter a hora em milissegundos para hora em minutos
 const calculaHora = (tempoEmMilissegundos) => {
     const tempo = {
         horas: +(tempoEmMilissegundos / 3600000).toFixed(0),
