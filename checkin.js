@@ -71,7 +71,7 @@ setTimeout(()=> {
     main.addEventListener('click', (event) => {
         const button = event.path[0].innerText
         const id = event.path[0].id
-    
+        //tratamos do checkout em outro arquivo p/ melhor organização
         if (button === 'Checkout') {
             ChekoutComponent(id);
         }
