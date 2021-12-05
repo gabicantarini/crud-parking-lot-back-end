@@ -6,6 +6,7 @@ export const FaturamentoComponent = () => {
     setTimeout(() => {
         view.getFaturamentoHtml();
 
+        //para buscar todos os preços
         let objetoFaturamento = []
         service.getActivities().then((dados) => {
             dados.forEach(element => {
@@ -13,7 +14,7 @@ export const FaturamentoComponent = () => {
                     objetoFaturamento.push(element)
                 }
             });
-            gerarObjetosDatas();
+            gerarObjetosDatas(); 
             gerarFaturamento();
         })
 
@@ -35,7 +36,7 @@ export const FaturamentoComponent = () => {
             let valor = {
                 contador: 0,
                 total: 0
-            }
+            }       
             objetoFaturamento.forEach((element) => {
                 if (typeof element.price == "number") {
                     valor.contador++
@@ -47,12 +48,13 @@ export const FaturamentoComponent = () => {
 
         }
 
+            //para criar linha (2) é referente as casas decimais
         const tabela = document.getElementById("tbody");
         const criarNovaLinha = (valor) => {
             const linhaNovo = document.createElement("tr");
             const dadosHtml = `
       <td id="qtd">${valor.contador}</td>
-      <td id="total">R$ ${valor.total.toFixed(2)}</td> 
+      <td id="total">R$ ${valor.total.toFixed(2)}</td>  
       <td><select id="datas"></select></td>
                         `;
             linhaNovo.innerHTML = dadosHtml;
@@ -63,17 +65,19 @@ export const FaturamentoComponent = () => {
         const criarOpcoes = (datas) => {
             const select = document.getElementById('datas')
             datas.forEach((element) => {
-                const option = new Option(element, element)
+                const option = new Option(element, element) //element é a opção de data 
                 select.add(option)
             })
         }
 
+        //pegar select id para filtrar as datas
         tabela.addEventListener('click', (event) => {
             if (event.path[0].id == 'datas') {
                 filtrarPorDatas(event)
             }
         })
 
+        //função para filtrar as datas
         const filtrarPorDatas = (event) => {
             const dia = event.path[0].value
             let valor = {
@@ -114,6 +118,7 @@ export const FaturamentoComponent = () => {
 
         }
 
+         //função retirada do google e adaptada para gráfico do estacionamento
         function renderGrafico() {
             google.charts.load("current", { packages: ["corechart"] });
             google.charts.setOnLoadCallback(drawChart);
